@@ -1,3 +1,25 @@
-@apiURL = http://localhost:8080/
+@apiURL = http://localhost:8080/users
 
 GET {{apiURL}}
+
+###logga in
+
+POST {{apiURL}}/login
+Content-Type: application/json
+
+{
+    "email": "jane@arcada.fi",
+    "username": "jane",
+    "password": "hemlis"
+}
+
+###registrera användare
+
+POST {{apiURL}}/register
+Content-Type: application/json
+
+{
+    "email": "jane@arcada.fi",
+    "username": "jane",
+    "password": "hemlis"
+}
