@@ -2,17 +2,6 @@
 
 GET {{apiURL}}
 
-###logga in
-
-POST {{apiURL}}/login
-Content-Type: application/json
-
-{
-    "email": "jane@arcada.fi",
-    "username": "jane",
-    "password": "hemlis"
-}
-
 ###registrera användare
 
 POST {{apiURL}}/register
@@ -23,3 +12,18 @@ Content-Type: application/json
     "username": "jane",
     "password": "hemlis"
 }
+
+###logga in
+
+POST {{apiURL}}/login
+Content-Type: application/json
+
+{
+    "email": "raholmti@arcada.fi",
+    "password": "hemlis"
+}
+
+###få tillgång till boards
+
+GET {{apiURL}}/boards
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjYsImVtYWlsIjoicmFob2xtdGlAYXJjYWRhLmZpIiwibmFtZSI6IlRpbnRpbiIsImlhdCI6MTc1ODc0MTYwNywiZXhwIjoxNzYxMzMzNjA3fQ.R5FUF0aKhtkHtJqZYMbQ4Pm0QCnQ0Scil0X9tPW6rjY

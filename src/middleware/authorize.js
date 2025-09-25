@@ -11,6 +11,7 @@ module.exports = (req, res, next) => {
 
         const user = jwt.verify(token, process.env.JWT_SECRET)
         req.authUser = user
+        console.log("Decoded user:", req.authUser);
 
         console.log(`token valid for ${user.sub} ${user.name}`)
         next()

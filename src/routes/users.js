@@ -29,8 +29,9 @@ router.post('/login', async (req, res) => {
         name: user.username,
     }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
-    res.send({ msg: "Login ok.", jwt: token })
-
+    // res.send({ msg: "Login ok.", jwt: token })
+    res.json({token});
+    console.log(token)
 })
 
 //Endpoint för skapande av användare (POST), tar emot användarnamn&lösen (som hashas+saltas), skickar till db
@@ -55,7 +56,19 @@ router.post('/register', async (req, res) => {
 
 //Ha en endpoint boards/, returnerar de boards användaren har rätt till
 
-/* router.get('/boards', async (req, res) => {
-    }) */
+router.get('/boards', authorize, async (req, res) => {
+
+    try {
+        const boards = await prisma.boards.findMany({
+            where: { userId: parseInt(req.authUser.sub) }
+        })
+        console.log(boards);
+
+        res.json(boards)
+    } catch (error) {
+        console.error("Fel vid Prisma-query:", error);
+        res.status(500).json({ msg: "Error. Problem fetching boards", error: error.message })
+    }
+})
 
 module.exports = router;
