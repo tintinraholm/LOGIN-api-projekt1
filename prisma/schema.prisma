@@ -14,9 +14,3 @@ model Users {
   createdAt DateTime @default(now())
   email     String   @unique
 }
-
-model Boards {
-  id        Int     @id @default(autoincrement())
-  boardName String? @db.VarChar
-  userId    Int
-}

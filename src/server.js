@@ -10,17 +10,11 @@ app.use(cors())
 const userRouter = require('./routes/users')
 app.use('/users', userRouter)
 
-console.log("Hello Node")
-
 app.get('/', (req, res) => {
     res.json({ msg: "Hej hej" })
 })
 
 app.listen(PORT, () => {
-    try {
-        console.log(`Running on http://localhost:${PORT}`)
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
+    console.log(`Running on port: ${PORT}`)
     
 })

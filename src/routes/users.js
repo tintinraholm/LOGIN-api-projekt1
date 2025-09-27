@@ -13,15 +13,15 @@ const prisma = new PrismaClient()
 
 router.post('/login', async (req, res) => {
     const user = await prisma.users.findUnique({
-        where: { email: req.body.email } //req.authUser.id
+        where: { email: req.body.email }
     })
 
-    if (user == null) return res.status(401).send({ msg: "Authentication failed (bad user)" })
+    if (user == null) return res.status(401).send({ msg: "Användare saknas" })
 
     const match = await bcrypt.compare(req.body.password, user.password)
 
     if (!match)
-        return res.status(401).send({ msg: "Autentication failed" })
+        return res.status(401).send({ msg: "Autentisering misslyckades" })
 
     const token = await jwt.sign({
         sub: user.id,
@@ -29,7 +29,6 @@ router.post('/login', async (req, res) => {
         name: user.username,
     }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
-    // res.send({ msg: "Login ok.", jwt: token })
     res.json({token});
     console.log(token)
 })
@@ -50,25 +49,8 @@ router.post('/register', async (req, res) => {
         res.json({ msg: "Registrerad! Välkommen:", id: newUser.username })
     } catch (error) {
         console.log(500)
-        res.status(500).send({ msg: "Error: Failed to create user" })
+        res.status(500).send({ msg: "Error: kunde inte skapa användare" })
     }
 })
-
-//Ha en endpoint boards/, returnerar de boards användaren har rätt till
-
-/*router.get('/boards', authorize, async (req, res) => {
-
-    try {
-        const boards = await prisma.boards.findMany({
-            where: { userId: parseInt(req.authUser.sub) }
-        })
-        console.log(boards);
-
-        res.json(boards)
-    } catch (error) {
-        console.error("Fel vid Prisma-query:", error);
-        res.status(500).json({ msg: "Error. Problem fetching boards", error: error.message })
-    }
-}) */
 
 module.exports = router;
