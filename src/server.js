@@ -6,7 +6,7 @@ const cors = require('cors')
 const PORT = process.env.PORT || 8080
 app.use(express.json())
 app.use(cors({
-  origin: "https://people.arcada.fi",
+    origin: "https://people.arcada.fi",
 }))
 
 const userRouter = require('./routes/users')
@@ -18,5 +18,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Running on port: ${PORT}`)
-    
+
 })
