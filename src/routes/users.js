@@ -108,8 +108,6 @@ router.delete('/logout', async (req, res) => {
         const refreshToken = authHeader && authHeader.split(" ")[1];
         if (!refreshToken) return res.status(401).json({ msg: 'No token provided' });
 
-        console.log("refreshToken i localStorage:", localStorage.getItem("refreshToken"));
-
         if (refreshToken) {
             await prisma.refresh_tokens.delete({
                 where: {
