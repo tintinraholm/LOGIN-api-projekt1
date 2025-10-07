@@ -111,7 +111,7 @@ router.delete('/logout', async (req, res) => {
         console.log("refreshToken i localStorage:", localStorage.getItem("refreshToken"));
 
         if (refreshToken) {
-            await prisma.refresh_tokens.deleteMany({
+            await prisma.refresh_tokens.delete({
                 where: {
                     token: refreshToken
                 }
