@@ -12,11 +12,6 @@ app.use(cors({
 const userRouter = require('./routes/users')
 app.use('/users', userRouter)
 
-app.get('/', (req, res) => {
-    res.json({ msg: "Hej hej" })
-})
-
 app.listen(PORT, () => {
     console.log(`Running on port: ${PORT}`)
-
 })

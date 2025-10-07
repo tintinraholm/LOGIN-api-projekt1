@@ -14,3 +14,11 @@ model Users {
   createdAt DateTime @default(now())
   email     String   @unique
 }
+
+model Refresh_tokens {
+  id         Int       @id(map: "Refresh_token_pkey") @default(autoincrement())
+  user_id    Int
+  token      String?   @db.VarChar
+  issued_at  DateTime? @db.Timestamp(6)
+  expires_at DateTime? @db.Timestamp(6)
+}

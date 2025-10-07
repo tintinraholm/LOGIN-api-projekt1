@@ -22,14 +22,28 @@ router.post('/login', async (req, res) => {
     if (!match)
         return res.status(401).send({ msg: "Autentisering misslyckades" })
 
+    //access-token
     const token = await jwt.sign({
         sub: user.id,
         email: user.email,
         name: user.username,
+    }, process.env.JWT_SECRET, { expiresIn: '15m' })
+
+    //refresh-token
+    const refreshToken = await jwt.sign({
+        sub: user.id,
+        mail: user.email,
+        name: user.username,
     }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
-    res.json({token});
+    await prisma.refresh_tokens.create({
+        data: { user_id: user.id, token: refreshToken }
+    })
+
+    res.json({token, refresh_token});
     console.log(token)
+    console.log(refreshToken)
+
 })
 
 //Endpoint för skapande av användare (POST), tar emot användarnamn&lösen (som hashas+saltas), skickar till db
@@ -51,5 +65,31 @@ router.post('/register', async (req, res) => {
         res.status(500).send({ msg: "Error: kunde inte skapa användare" })
     }
 })
+
+router.post('/refresh'), async (req, res) => {
+    //skicka refreshtoken som auktoriserings-header
+
+    if(refreshToken) {
+        const token = await jwt.sign({
+        sub: user.id,
+        email: user.email,
+        name: user.username,
+    }, process.env.JWT_SECRET, { expiresIn: '15m' })
+
+    res.json(token)
+    }
+
+}
+
+router.delete('/logout'), async (req, res) => {
+    //radera refreshtoken, radera session token från lokalstorage
+
+    await prisma.refresh_tokens.delete ({
+        token: refreshToken
+    })
+
+    localStorage.removeItem("jwtToken")
+    localStorage.removeItem("refreshToken")
+}
 
 module.exports = router;
