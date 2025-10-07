@@ -75,12 +75,12 @@ router.post('/refresh', async (req, res) => {
         const refreshToken = authHeader && authHeader.split(" ")[1];
         if (!refreshToken) return res.status(401).json({ msg: 'No refresh token' });
 
-        const storedToken = await prisma.refresh_token.findUnique({
+        const storedToken = await prisma.refresh_tokens.findUnique({
             where: { token: refreshToken }
         });
         if (!storedToken) return res.status(403).json({ msg: 'Inte giltig refreshtoken' });
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.users.findUnique({
             where: { id: req.body.id }
         });
 
