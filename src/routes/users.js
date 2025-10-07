@@ -38,7 +38,10 @@ router.post('/login', async (req, res) => {
     }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
     await prisma.refresh_tokens.create({
-        data: { user_id: user.id, token: refreshToken }
+        data: {
+            user_id: user.id, token: refreshToken, issued_at: new Date(),
+            expires_at: new Date()
+        }
     })
 
     res.json({ token, refreshToken });
