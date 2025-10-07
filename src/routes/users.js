@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
         data: { user_id: user.id, token: refreshToken }
     })
 
-    res.json({token, refresh_token});
+    res.json({ token, refresh_token });
     console.log(token)
     console.log(refreshToken)
 
@@ -66,26 +66,33 @@ router.post('/register', async (req, res) => {
     }
 })
 
-router.post('/refresh'), async (req, res) => {
+router.post('/refresh', async (req, res) => {
     //skicka refreshtoken som auktoriserings-header
 
-    if(refreshToken) {
-        const token = await jwt.sign({
-        sub: user.id,
-        email: user.email,
-        name: user.username,
-    }, process.env.JWT_SECRET, { expiresIn: '15m' })
+    const storedToken = await prisma.refresh_tokens.findUnique({
+        where: { token: refreshToken }
+    });
+    if (!storedToken) return res.status(403).json({ msg: 'Inte giltig refreshtoken' });
 
-    res.json(token)
+    if (storedToken) {
+        const token = await jwt.sign({
+            sub: user.id,
+            email: user.email,
+            name: user.username,
+        }, process.env.JWT_SECRET, { expiresIn: '15m' })
+
+        res.json(token)
     }
 
-}
+})
 
 router.delete('/logout'), async (req, res) => {
     //radera refreshtoken, radera session token från lokalstorage
 
-    await prisma.refresh_tokens.delete ({
-        token: refreshToken
+    await prisma.refresh_tokens.delete({
+        where: {
+            token: refreshToken
+        }
     })
 
     localStorage.removeItem("jwtToken")
