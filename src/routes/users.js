@@ -5,7 +5,8 @@ const router = express.Router();
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client');
+const { error } = require('console');
 const prisma = new PrismaClient()
 
 //Ha en endpoint för inloggning (POST) som tar emot användarnamn och lösenord
@@ -69,19 +70,28 @@ router.post('/register', async (req, res) => {
 router.post('/refresh', async (req, res) => {
     //skicka refreshtoken som auktoriserings-header
 
-    const storedToken = await prisma.refresh_tokens.findUnique({
-        where: { token: refreshToken }
-    });
-    if (!storedToken) return res.status(403).json({ msg: 'Inte giltig refreshtoken' });
+    try {
+        const authHeader = req.headers['authorization'];
+        const refreshToken = authHeader && authHeader.split(' ')[1];
+        if (!refreshToken) return res.status(401).json({ msg: 'No refresh token' });
 
-    if (storedToken) {
-        const token = await jwt.sign({
-            sub: user.id,
-            email: user.email,
-            name: user.username,
-        }, process.env.JWT_SECRET, { expiresIn: '15m' })
+        const storedToken = await prisma.refresh_tokens.findUnique({
+            where: { token: refreshToken }
+        });
+        if (!storedToken) return res.status(403).json({ msg: 'Inte giltig refreshtoken' });
 
-        res.json(token)
+        if (storedToken) {
+            const token = await jwt.sign({
+                sub: user.id,
+                email: user.email,
+                name: user.username,
+            }, process.env.JWT_SECRET, { expiresIn: '15m' })
+
+            res.json(token)
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(403).json({ msg: 'Invalid/expired refresh token' });
     }
 
 })
@@ -89,14 +99,25 @@ router.post('/refresh', async (req, res) => {
 router.delete('/logout'), async (req, res) => {
     //radera refreshtoken, radera session token från lokalstorage
 
-    await prisma.refresh_tokens.delete({
-        where: {
-            token: refreshToken
-        }
-    })
+    try {
+        const authHeader = req.headers['authorization'];
+        const refreshToken = authHeader && authHeader.split(' ')[1];
+        if (!refreshToken) return res.status(401).json({ msg: 'No token provided' });
 
-    localStorage.removeItem("jwtToken")
-    localStorage.removeItem("refreshToken")
+        if (refreshToken) {
+            await prisma.refresh_tokens.delete({
+                where: {
+                    token: refreshToken
+                }
+            })
+        }
+    } catch (err) {
+        if (error) {
+            return res.status(404).json({ msg: 'Token not found' });
+        }
+        console.error(err);
+        res.status(500).json({ msg: 'Server error' });
+    }
 }
 
 module.exports = router;
