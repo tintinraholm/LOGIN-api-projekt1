@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
         data: { user_id: user.id, token: refreshToken }
     })
 
-    res.json({ token, refresh_token });
+    res.json({ token, refreshToken });
     console.log(token)
     console.log(refreshToken)
 
@@ -79,6 +79,10 @@ router.post('/refresh', async (req, res) => {
             where: { token: refreshToken }
         });
         if (!storedToken) return res.status(403).json({ msg: 'Inte giltig refreshtoken' });
+
+        const user = await prisma.user.findUnique({
+            where: { id: req.body.id }
+        });
 
         if (storedToken) {
             const token = await jwt.sign({
