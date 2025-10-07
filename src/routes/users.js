@@ -114,7 +114,8 @@ router.delete('/logout', async (req, res) => {
         if (refreshToken) {
             await prisma.refresh_tokens.delete({
                 where: {
-                    token: refreshToken
+                    token: refreshToken,
+                    user_id: users.id
                 }
             })
         }
