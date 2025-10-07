@@ -75,7 +75,7 @@ router.post('/refresh', async (req, res) => {
         const refreshToken = authHeader && authHeader.split(" ")[1];
         if (!refreshToken) return res.status(401).json({ msg: 'No refresh token' });
 
-        const storedToken = await prisma.refresh_tokens.findUnique({
+        const storedToken = await prisma.refresh_token.findUnique({
             where: { token: refreshToken }
         });
         if (!storedToken) return res.status(403).json({ msg: 'Inte giltig refreshtoken' });
@@ -93,8 +93,8 @@ router.post('/refresh', async (req, res) => {
 
             res.json(token)
         }
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.error(error);
         res.status(403).json({ msg: 'Invalid/expired refresh token' });
     }
 
@@ -115,7 +115,8 @@ router.delete('/logout', async (req, res) => {
                 }
             })
         }
-    } catch (err) {
+        return res.json({ msg: 'Utloggad' })
+    } catch (error) {
         if (error) {
             return res.status(404).json({ msg: 'Token not found' });
         }
