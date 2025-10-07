@@ -108,8 +108,10 @@ router.delete('/logout', async (req, res) => {
         const refreshToken = authHeader && authHeader.split(" ")[1];
         if (!refreshToken) return res.status(401).json({ msg: 'No token provided' });
 
+        console.log("refreshToken i localStorage:", localStorage.getItem("refreshToken"));
+
         if (refreshToken) {
-            await prisma.refresh_tokens.delete({
+            await prisma.refresh_tokens.deleteMany({
                 where: {
                     token: refreshToken
                 }
@@ -118,10 +120,10 @@ router.delete('/logout', async (req, res) => {
         return res.json({ msg: 'Utloggad' })
     } catch (error) {
         if (error) {
-            return res.status(404).json({ msg: 'Token not found' });
+            return res.json({ msg: 'Token not found' });
         }
-        console.error(err);
-        res.status(500).json({ msg: 'Server error' });
+        console.error(error);
+        res.json({ msg: 'Server error' });
     }
 })
 
