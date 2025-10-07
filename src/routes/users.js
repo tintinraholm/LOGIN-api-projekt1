@@ -96,7 +96,7 @@ router.post('/refresh', async (req, res) => {
 
 })
 
-router.delete('/logout'), async (req, res) => {
+router.delete('/logout', async (req, res) => {
     //radera refreshtoken, radera session token från lokalstorage
 
     try {
@@ -118,6 +118,6 @@ router.delete('/logout'), async (req, res) => {
         console.error(err);
         res.status(500).json({ msg: 'Server error' });
     }
-}
+})
 
 module.exports = router;
