@@ -120,7 +120,7 @@ router.delete('/logout', async (req, res) => {
         return res.json({ msg: 'Utloggad' })
     } catch (error) {
         if (error) {
-            return res.json({ msg: 'Token not found' });
+            return res.json({ msg: 'Hittade inte token' });
         }
         console.error(error);
         res.json({ msg: 'Server error' });
