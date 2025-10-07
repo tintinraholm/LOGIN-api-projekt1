@@ -72,7 +72,7 @@ router.post('/refresh', async (req, res) => {
 
     try {
         const authHeader = req.headers['authorization'];
-        const refreshToken = authHeader && authHeader.split(' ')[1];
+        const refreshToken = authHeader && authHeader.split(" ")[1];
         if (!refreshToken) return res.status(401).json({ msg: 'No refresh token' });
 
         const storedToken = await prisma.refresh_tokens.findUnique({
@@ -101,7 +101,7 @@ router.delete('/logout'), async (req, res) => {
 
     try {
         const authHeader = req.headers['authorization'];
-        const refreshToken = authHeader && authHeader.split(' ')[1];
+        const refreshToken = authHeader && authHeader.split(" ")[1];
         if (!refreshToken) return res.status(401).json({ msg: 'No token provided' });
 
         if (refreshToken) {
