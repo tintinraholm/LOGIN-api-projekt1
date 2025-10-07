@@ -6,7 +6,8 @@ const cors = require('cors')
 const PORT = process.env.PORT || 8080
 app.use(express.json())
 app.use(cors({
-    origin: [ "https://people.arcada.fi", "http://localhost:5500" ]
+    origin: ["https://people.arcada.fi", "http://localhost:5500",
+        "http://127.0.0.1:5500"]
 }))
 
 const userRouter = require('./routes/users')
