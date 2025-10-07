@@ -39,8 +39,7 @@ router.post('/login', async (req, res) => {
 
     await prisma.refresh_tokens.create({
         data: {
-            user_id: user.id, token: refreshToken, issued_at: new Date(),
-            expires_at: new Date()
+            user_id: user.id, token: refreshToken
         }
     })
 
@@ -114,8 +113,7 @@ router.delete('/logout', async (req, res) => {
         if (refreshToken) {
             await prisma.refresh_tokens.delete({
                 where: {
-                    token: refreshToken,
-                    user_id: users.id
+                    token: refreshToken
                 }
             })
         }
