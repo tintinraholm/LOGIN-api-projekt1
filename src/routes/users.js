@@ -110,14 +110,23 @@ router.delete('/logout', async (req, res) => {
         const refreshToken = authHeader && authHeader.split(" ")[1];
         if (!refreshToken) return res.status(401).json({ msg: 'No token provided' });
 
-        console.log(refreshToken)
-        if (refreshToken != null) {
-            await prisma.refresh_tokens.delete({
-                where: {
-                    token: refreshToken
-                }
-            })
+        console.log(refreshToken);
+
+        const existingToken = await prisma.refresh_tokens.findUnique({
+            where: {
+                token: refreshToken
+            }
+        });
+
+        if (!existingToken) {
+            return res.status(404).json({ msg: 'Hittade inte token i databasen' });
         }
+
+        await prisma.refresh_tokens.delete({
+            where: {
+                token: refreshToken
+            }
+        })
         return res.send({ msg: 'Utloggad' })
     } catch (error) {
         if (error) {
