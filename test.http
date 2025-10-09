@@ -9,5 +9,15 @@ Content-Type: application/json
 }
 ###
 
+POST {{apiURL}}/refresh
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjYsIm1haWwiOiJyYWhvbG10aUBhcmNhZGEuZmkiLCJuYW1lIjoiVGludGluIiwiaWF0IjoxNzYwMDA0MDgwLCJleHAiOjE3NjI1OTYwODB9.p3AOLNBp8jJ9s8xPBGFXgO4-s0t74e3NcoRs91V-Y7k
+
+{
+    "id": 6
+}
+
+###
+
 DELETE {{apiURL}}/logout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjYsIm1haWwiOiJyYWhvbG10aUBhcmNhZGEuZmkiLCJuYW1lIjoiVGludGluIiwiaWF0IjoxNzU5OTkyODIzLCJleHAiOjE3NjI1ODQ4MjN9.1iFEkMy2kIkHciuBQwy8kgFFJmR7WMDwtL7ae3E3oM4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjYsIm1haWwiOiJyYWhvbG10aUBhcmNhZGEuZmkiLCJuYW1lIjoiVGludGluIiwiaWF0IjoxNzU5OTk3ODk4LCJleHAiOjE3NjI1ODk4OTh9.8-eXtPeA7-3RgPiGeA79WdzXrImjtlPycagT_5-pbSI

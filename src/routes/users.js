@@ -83,7 +83,7 @@ router.post('/refresh', async (req, res) => {
         if (!storedToken) return res.status(403).json({ msg: 'Inte giltig refreshtoken' });
 
         const user = await prisma.users.findUnique({
-            where: { id: req.body.id }
+            where: { id: storedToken.user_id }
         });
 
         if (storedToken) {
@@ -93,7 +93,8 @@ router.post('/refresh', async (req, res) => {
                 name: user.username,
             }, process.env.JWT_SECRET, { expiresIn: '15m' })
 
-            res.json(token)
+            res.json({token})
+            console.log(`accesstoken: ${token}`)
         }
     } catch (error) {
         console.error(error);
@@ -127,13 +128,13 @@ router.delete('/logout', async (req, res) => {
                 token: refreshToken
             }
         })
-        return res.send({ msg: 'Utloggad' })
+        return res.json({ msg: 'Utloggad' })
     } catch (error) {
         if (error) {
-            return res.send({ msg: 'Hittade inte token' });
+            return res.json({ msg: 'Hittade inte token' });
         }
         console.error(error);
-        res.send({ msg: 'Server error' });
+        res.json({ msg: 'Server error' });
     }
 })
 
